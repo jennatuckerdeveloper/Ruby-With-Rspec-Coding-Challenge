@@ -62,6 +62,9 @@ describe Artist do
       it "errors without a name keyword param" do
         expect { Artist.new }.to raise_error(ArgumentError)
       end
+      it "errors with empty string for name" do
+        expect { Artist.new(name: '')}.to raise_error(RuntimeError)
+      end
     end
   end
 
@@ -166,6 +169,11 @@ describe Artist do
       expect { artist.add_song(song: folkSong) }.to raise_error(RuntimeError)
     end
 
+    it "errors if param not Song class instance" do 
+      notSong = "I am a string, not a song."
+      expect { @artist1.add_song(song: notSong) }.to raise_error(RuntimeError)
+    end
+
   end
 
   describe "#remove_song" do 
@@ -195,6 +203,12 @@ describe Artist do
     it "errors when a song cannot be found" do 
       expect { @artist1.remove_song(song: @folkSong1) }.to raise_error(RuntimeError)
     end
+
+    it "errors if param not Song class instance" do 
+      notSong = "I am a string, not a song."
+      expect { @artist1.remove_song(song: notSong) }.to raise_error(RuntimeError)
+    end
+
   end
 
   describe "#set_featured_song" do
@@ -212,19 +226,21 @@ describe Artist do
       expect(@artist1.featured_song_id).to eq(@folkSong2.id)
     end
 
+    it "removes featured song if song is removed" do
+      @artist1.remove_song(song: @folkSong2)
+      expect(@artist1.featured_song_id).to eq(nil)
+    end
+
     it "errors if song set as featured not found" do 
       otherSong = Song.new(name: 'Other Song', genre: 'Punk')
       expect { @artist1.set_featured_song(song: otherSong) }.to raise_error(RuntimeError)
     end
 
-    # it "will remove a featured song if that song is removed" do
-    #   artist1.add_song(song: song1)
-    #   artist1.set_featured_song(song: song1)
-    #   song1ID = song1.id
-    #   expect(artist1.featured_song_id).to eq(song1ID)
-    #   artist1.remove_song(song: song1)
-    #   expect(artist1.featured_song_id).to eq(nil)
-    # end
+    it "errors if param not Song class instance" do 
+      notSong = "I am a string, not a song."
+      expect { @artist1.set_featured_song(song: notSong) }.to raise_error(RuntimeError)
+    end
+
   end
 
   describe "#print_readable" do

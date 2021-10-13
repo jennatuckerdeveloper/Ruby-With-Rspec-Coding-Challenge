@@ -5,10 +5,13 @@ describe Song do
 
   describe "Song::new" do 
 
+    before(:all) do
+      @song_name = 'Blue Song'
+      @genre_string = 'Folk'
+    end
+
     context "with valid initialization params" do
       before(:all) do
-        @song_name = 'Blue Song'
-        @genre_string = 'Folk'
         @song = Song.new(name: @song_name, genre: @genre_string)
       end
       it "is assigned an @id" do
@@ -38,6 +41,14 @@ describe Song do
 
       it "errors without genre keyword param" do
         expect { Song.new(name: @song_name)}.to raise_error(ArgumentError)
+      end
+
+      it "errors with empty string for name" do
+        expect { Song.new(name: '', genre: @genre_string)}.to raise_error(RuntimeError)
+      end
+
+      it "errors with empty string for genre" do
+        expect { Song.new(name: @song_name, genre: '')}.to raise_error(RuntimeError)
       end
     end
   end  

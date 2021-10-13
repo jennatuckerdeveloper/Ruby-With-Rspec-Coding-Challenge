@@ -8,6 +8,16 @@ class Song
     set_song_ID
     @name = name
     @genre = genre
+    check_params
+  end
+
+  def check_params
+    if @name.empty?
+      raise 'The name param cannot be an empty string.'
+    end
+    if @genre.empty?
+      raise 'The genre param cannot be an empty string'
+    end
   end
 
   def set_song_ID

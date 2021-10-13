@@ -1,12 +1,11 @@
-require_relative 'Song'
-
 class Artist
 
   @@next_artist_instance_id = 0
 
  def initialize(name:)
-  set_artist_ID
   @name = name
+  check_params
+  set_artist_ID
   @songs = []
   @song_count = 0
   @featured_song_id = nil
@@ -17,6 +16,12 @@ class Artist
  attr_reader :id, :name, :songs, :song_count, :featured_song_id,
  :artist_genres, :top_genres
 
+def check_params
+  if @name.empty?
+    raise 'The name param cannot be an empty string.'
+  end
+end
+
  def set_artist_ID
   @id = @@next_artist_instance_id
   @@next_artist_instance_id += 1
@@ -24,6 +29,12 @@ class Artist
  
  def self.next_artist_instance_id
   @@next_artist_instance_id
+ end
+
+ def expect_song(object)
+  if !object.is_a?(Song) 
+    raise "This method expects a Song class instance."
+  end
  end
 
  def update_song_count 
@@ -40,6 +51,7 @@ class Artist
  end
 
  def add_song(song:) 
+  expect_song(song)
   if find_song(song)
     raise "Song already found in artist's current songs."
   else  
@@ -67,6 +79,7 @@ def add_genre_to_count(genre)
 end 
 
 def remove_song(song:)
+  expect_song(song)
   if find_song(song)
     delete_song(song)
     update_song_count
@@ -108,6 +121,7 @@ def derive_top_three_genres
 end
 
  def set_featured_song(song:)
+  expect_song(song)
   if find_song(song)
     set_featured_song_id(song.id)
   else   
@@ -126,6 +140,3 @@ end
  end
 
 end
-
-
-
