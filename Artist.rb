@@ -14,7 +14,7 @@ class Artist
   @artist_genres = {}
  end
 
- attr_accessor :id, :name, :songs, :song_count, :featured_song_id,
+ attr_reader :id, :name, :songs, :song_count, :featured_song_id,
  :artist_genres, :top_genres
 
  def set_artist_ID

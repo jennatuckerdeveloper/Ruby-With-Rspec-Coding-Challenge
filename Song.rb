@@ -1,8 +1,8 @@
 class Song
 
-  @@nextSongInstanceID = 0
+  @@next_song_instance_id = 0
 
-  attr_accessor :id, :genre, :name
+  attr_reader :id, :genre, :name
 
   def initialize(name:, genre:)
     set_song_ID
@@ -11,12 +11,12 @@ class Song
   end
 
   def set_song_ID
-    @id = @@nextSongInstanceID
-    @@nextSongInstanceID += 1
+    @id = @@next_song_instance_id
+    @@next_song_instance_id += 1
   end
 
-  def self.nextSongInstanceID
-    @@nextSongInstanceID
+  def self.next_song_instance_id
+    @@next_song_instance_id
   end
 
 end
