@@ -59,6 +59,7 @@ end
     update_song_count
     add_to_artist_genres(song.genre)
   end
+  print_readable
  end
 
  def store_new_song(song)
@@ -90,6 +91,7 @@ def remove_song(song:)
   else  
     raise "Cannot find this song in the artist's current songs."
   end
+  print_readable
 end
 
 def delete_song(song)

@@ -2,16 +2,29 @@ require 'rspec'
 require_relative 'artist'
 require_relative 'song'
 
+=begin
+  The style guide rules prefer let over lifecycle hooks. 
+  Let replaces before(:each) rather than before(:all).
+  The Song tests use let to create context. 
+  The Artist spec uses lifecycle hooks and instance variables. 
+  
+  For complex, accumulating changes to the same class instance, 
+  using let requires helper methods and code duplication. 
+  Composing these tests using contexts and before(:each)
+  seemed the most readable with the least code duplication. 
+=end 
+
+
 describe Artist do
 
-  shared_context "create artist instance artist1" do
+  shared_context "with artist instance artist1" do
     before(:all) do 
       @name1 = 'Sadie Smith'
       @artist1 = Artist.new(name: @name1)
     end
   end
 
-  shared_context "add two songs with genre Folk" do
+  shared_context "with two songs of genre Folk" do
     before(:all) do
       @genre_folk = 'Folk'
       @folkSong1 = Song.new(name: 'Blue Song', genre: @genre_folk)
@@ -25,7 +38,7 @@ describe Artist do
 
     context "with valid initialization params" do
 
-      include_context "create artist instance artist1"
+      include_context "with artist instance artist1"
 
       it "is assigned an @id" do
         expect(@artist1.id).to eq(0)
@@ -58,7 +71,7 @@ describe Artist do
       end
     end
 
-    context "missing initialization params" do
+    context "without all initialization params" do
       it "errors without a name keyword param" do
         expect { Artist.new }.to raise_error(ArgumentError)
       end
@@ -70,9 +83,9 @@ describe Artist do
 
   describe "#add_song" do 
     
-    include_context "create artist instance artist1"
+    include_context "with artist instance artist1"
 
-    shared_context "add two songs with genre Blues" do
+    shared_context "with two songs of genre Blues" do
       before(:all) do
         @genre_blues = 'Blues'
         @bluesSong1 = Song.new(name: 'Orange Song', genre: @genre_blues)
@@ -82,7 +95,7 @@ describe Artist do
       end
     end
 
-    shared_context "add two songs with genre Punk" do
+    shared_context "with two songs of genre Punk" do
       before(:all) do
         @genre_punk = 'Punk'
         @punkSong1 = Song.new(name: 'Red Song', genre: @genre_punk)
@@ -93,7 +106,7 @@ describe Artist do
     end
 
 
-    shared_context "add three songs with genre Jazz" do 
+    shared_context "with three songs of genre Jazz" do 
       before(:all) do
         @genre_jazz = 'Jazz'
         @jazzSong1 = Song.new(name: 'Black Song', genre: @genre_jazz)
@@ -105,12 +118,14 @@ describe Artist do
       end
     end
 
-    context "2 songs of 1 unique genre added" do
+    context "with 2 songs of 1 unique genre added" do
 
-      include_context "add two songs with genre Folk"
+      include_context "with two songs of genre Folk"
 
-      it "adds the song to the artist's songs" do 
+      it "adds a first song to the artist's songs" do 
         expect(@artist1.songs.include? @folkSong1).to be true
+      end
+      it "adds a second song to the artist's songs" do 
         expect(@artist1.songs.include? @folkSong2).to be true
       end
       it "increments the @song_count total" do
@@ -124,9 +139,9 @@ describe Artist do
       end     
     end
 
-    context "songs of 2 unique genres added" do
+    context "with songs of 2 unique genres" do
 
-      include_context "add two songs with genre Blues"
+      include_context "with two songs of genre Blues"
 
       it "adds the new genre to @top_genres" do
         expect(@artist1.top_genres.include? @genre_blues).to be true
@@ -137,9 +152,9 @@ describe Artist do
 
     end
 
-    context "songs of 3 unique genres added" do
+    context "with songs of 3 unique genres" do
 
-      include_context "add two songs with genre Punk"
+      include_context "with two songs of genre Punk"
 
       it "adds the new genre to empty @top_genres" do
         expect(@artist1.top_genres.include? @genre_punk).to be true
@@ -150,9 +165,9 @@ describe Artist do
 
     end
 
-    context "more songs of 4th unique genre added" do
+    context "with more songs of 4th unique genre" do
 
-      include_context "add three songs with genre Jazz" 
+      include_context "with three songs of genre Jazz" 
 
       it "updates @top_genres with new top genre" do
         expect(@artist1.top_genres.include? @genre_jazz).to be true
@@ -178,11 +193,10 @@ describe Artist do
 
   describe "#remove_song" do 
     
-    include_context "create artist instance artist1"
-    include_context "add two songs with genre Folk"
+    include_context "with artist instance artist1"
+    include_context "with two songs of genre Folk"
 
     it "removes song from artist's songs" do 
-      expect(@artist1.songs.include? @folkSong1).to be true
       @artist1.remove_song(song: @folkSong1)
       expect(@artist1.songs.include? @folkSong1).to be false
       
@@ -192,11 +206,10 @@ describe Artist do
       expect(@artist1.song_count).to eq(1)
     end
 
-    context "one song of a genre remains" do
+    context "when one song of a genre remains" do
       it "removes the genre with last song" do
         @artist1.remove_song(song: @folkSong2)
         expect(@artist1.top_genres.include? @genre_folk).to be false
-        expect(@artist1.top_genres.length).to eq(0)
       end
     end
 
@@ -213,8 +226,8 @@ describe Artist do
 
   describe "#set_featured_song" do
 
-    include_context "create artist instance artist1"
-    include_context "add two songs with genre Folk"
+    include_context "with artist instance artist1"
+    include_context "with two songs of genre Folk"
 
     it "sets @featured_song_id" do
       @artist1.set_featured_song(song: @folkSong1)
@@ -244,7 +257,7 @@ describe Artist do
   end
 
   describe "#print_readable" do
-    include_context "create artist instance artist1"
+    include_context "with artist instance artist1"
 
   it "can print a readable representation" do 
     readable = "{ id: #{@artist1.id}, name: '#{@artist1.name}', song_count: #{@artist1.song_count}, top_genres: #{@artist1.top_genres}, featured_song_id: #{@artist1.featured_song_id} }"

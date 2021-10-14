@@ -1,14 +1,5 @@
 =begin
   
-Song 
-- error handle no empties for name and genre 
-
-  
-Artist 
-- Hitch up remove_song to set featured (song must exist to be featured)
-- Protect from adding songs that are not Song class type 
-- Same on featured, etc, if that doesn't come for free... probably does 
-
 tests 
 - consider using let?  Is this worth it FIRST? WHY? 
 
