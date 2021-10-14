@@ -1,22 +1,32 @@
 class Song
 
-  @@nextSongInstanceID = 0
+  @@next_song_instance_id = 0
 
-  attr_accessor :id, :genre, :name
+  attr_reader :id, :genre, :name
 
   def initialize(name:, genre:)
     set_song_ID
     @name = name
     @genre = genre
+    check_params
+  end
+
+  def check_params
+    if @name.empty?
+      raise 'The name param cannot be an empty string.'
+    end
+    if @genre.empty?
+      raise 'The genre param cannot be an empty string'
+    end
   end
 
   def set_song_ID
-    @id = @@nextSongInstanceID
-    @@nextSongInstanceID += 1
+    @id = @@next_song_instance_id
+    @@next_song_instance_id += 1
   end
 
-  def self.nextSongInstanceID
-    @@nextSongInstanceID
+  def self.next_song_instance_id
+    @@next_song_instance_id
   end
 
 end
