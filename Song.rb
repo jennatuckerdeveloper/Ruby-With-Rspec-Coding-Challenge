@@ -11,7 +11,7 @@ class Song
     check_params
   end
 
-  def check_params
+  private def check_params
     if @name.empty?
       raise 'The name param cannot be an empty string.'
     end
@@ -20,7 +20,7 @@ class Song
     end
   end
 
-  def set_song_ID
+  private def set_song_ID
     @id = @@next_song_instance_id
     @@next_song_instance_id += 1
   end
